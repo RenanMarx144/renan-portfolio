@@ -193,7 +193,7 @@ export default function Home() {
         <h2>Performance, confiabilidade e IA aplicada com engenharia mensurável.</h2>
         <div className="heroActions">
           <a className="primaryButton" href="mailto:renan.marx144@gmail.com">renan.marx144@gmail.com</a>
-          <a className="secondaryButton" href="https://github.com/RenanMarx144" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a className="secondaryButton" href="https://www.linkedin.com/in/renanmarques-2202" target="_blank" rel="noreferrer">LinkedIn ↗</a>
         </div>
       </section>
 

@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Renan Marques | Senior Software Engineer",
   description:
-    "Software Engineering, performance, scalability, observability and applied AI. Case studies in production diagnostics, legacy modernization and AI-assisted delivery.",
+    "Engenharia de software com foco em performance, escalabilidade, observabilidade e IA aplicada. Estudos de caso em diagnóstico de produção, modernização de legados e entrega assistida por IA.",
   keywords: [
     "Senior Software Engineer",
     "Performance Engineering",
@@ -21,9 +21,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Renan Marques | Senior Software Engineer",
     description:
-      "Performance, scalability, observability and applied AI for complex software systems.",
+      "Performance, escalabilidade, observabilidade e IA aplicada para sistemas complexos.",
     type: "website",
+    locale: "pt_BR",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#080a0e",
 };
 
 export default function RootLayout({
