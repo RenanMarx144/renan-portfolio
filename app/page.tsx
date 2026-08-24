@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 const skills = [
   {
     title: "Software Engineering",
@@ -71,9 +75,56 @@ const caseStudies = [
   },
 ];
 
+const WHATSAPP_URL = "https://wa.me/5511992570684";
+
 export default function Home() {
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // scroll-triggered reveal for below-the-fold content
+    const revealEls = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    let observer: IntersectionObserver | undefined;
+    if ("IntersectionObserver" in window && revealEls.length) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in-view");
+              observer?.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+      );
+      revealEls.forEach((el) => observer?.observe(el));
+    } else {
+      revealEls.forEach((el) => el.classList.add("in-view"));
+    }
+
+    // top scroll-progress bar
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const scrollable = doc.scrollHeight - doc.clientHeight;
+      const pct = scrollable > 0 ? doc.scrollTop / scrollable : 0;
+      if (progressRef.current) progressRef.current.style.transform = `scaleX(${pct})`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
     <main>
+      <noscript>
+        <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+      </noscript>
+
+      <div className="scrollProgress" ref={progressRef} />
+
       <header className="topbar shell">
         <div className="termChrome">
           <div className="termDots"><span /><span /><span /></div>
@@ -105,6 +156,7 @@ export default function Home() {
           </p>
           <div className="heroActions">
             <a className="primaryButton" href="#cases">$ ver-cases</a>
+            <a className="secondaryButton" href={WHATSAPP_URL} target="_blank" rel="noreferrer">$ whatsapp</a>
             <a className="secondaryButton" href="https://github.com/RenanMarx144" target="_blank" rel="noreferrer">$ github</a>
             <a className="secondaryButton" href="https://www.linkedin.com/in/renanmarques-2202" target="_blank" rel="noreferrer">$ linkedin</a>
           </div>
@@ -112,8 +164,8 @@ export default function Home() {
       </section>
 
       <section className="metrics shell" id="impacto">
-        {metrics.map((metric) => (
-          <article className="metric" key={metric.label}>
+        {metrics.map((metric, i) => (
+          <article className="metric reveal" style={{ transitionDelay: `${i * 70}ms` }} key={metric.label}>
             <div className="metricHead">
               <span className="metricTag">{metric.tag}</span>
               <span className="metricDot" />
@@ -134,7 +186,7 @@ export default function Home() {
       </section>
 
       <section className="section shell" id="cases">
-        <div className="sectionIntro">
+        <div className="sectionIntro reveal">
           <p className="kicker">// selected_engineering_work</p>
           <h2>Cases que mostram como eu penso e resolvo problemas.</h2>
           <p>
@@ -143,8 +195,8 @@ export default function Home() {
         </div>
 
         <div className="cases">
-          {caseStudies.map((item) => (
-            <article className="case" key={item.title}>
+          {caseStudies.map((item, i) => (
+            <article className="case reveal" style={{ transitionDelay: `${i * 90}ms` }} key={item.title}>
               <p className="caseEyebrow">{item.eyebrow}</p>
               <h3>{item.title}</h3>
               <p className="caseText">{item.text}</p>
@@ -158,29 +210,29 @@ export default function Home() {
       </section>
 
       <section className="section shell" id="experiencia">
-        <div className="sectionIntro compact">
+        <div className="sectionIntro compact reveal">
           <p className="kicker">// experiencia_em_destaque</p>
           <h2>Madnezz · Senior Full-Stack / Software Engineer</h2>
           <p>Ago 2025 — Presente</p>
         </div>
 
         <div className="experienceGrid">
-          <article>
+          <article className="reveal" style={{ transitionDelay: "0ms" }}>
             <span>[01]</span>
             <h3>Performance</h3>
             <p>Diagnóstico e remoção de gargalos em requests, SQL, CPU e memória, com observabilidade, tuning, cache e arquitetura.</p>
           </article>
-          <article>
+          <article className="reveal" style={{ transitionDelay: "70ms" }}>
             <span>[02]</span>
             <h3>Modernização</h3>
             <p>Evolução gradual de sistemas legados para serviços em Python/FastAPI e Node.js, mantendo integração com Laravel e React.</p>
           </article>
-          <article>
+          <article className="reveal" style={{ transitionDelay: "140ms" }}>
             <span>[03]</span>
             <h3>Observabilidade</h3>
             <p>Instrumentação e análise com OpenTelemetry e Grafana para traces, métricas, logs, percentis e investigação de incidentes.</p>
           </article>
-          <article>
+          <article className="reveal" style={{ transitionDelay: "210ms" }}>
             <span>[04]</span>
             <h3>Applied AI</h3>
             <p>Uso de agentes, MCP, skills e contexto estruturado para investigação técnica, documentação, revisão e automação de engenharia.</p>
@@ -189,13 +241,13 @@ export default function Home() {
       </section>
 
       <section className="section shell" id="stack">
-        <div className="sectionIntro compact">
+        <div className="sectionIntro compact reveal">
           <p className="kicker">// core_expertise</p>
           <h2>Ferramentas escolhidas pelo problema, não pelo hype.</h2>
         </div>
         <div className="skills">
-          {skills.map((skill) => (
-            <article key={skill.title}>
+          {skills.map((skill, i) => (
+            <article className="reveal" style={{ transitionDelay: `${i * 60}ms` }} key={skill.title}>
               <h3>{skill.title}</h3>
               <p>{skill.items}</p>
             </article>
@@ -203,11 +255,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="cta shell">
+      <section className="cta shell reveal">
         <p className="kicker">// lets_build_better_systems</p>
         <h2>Performance, confiabilidade e IA aplicada com engenharia mensurável.</h2>
         <div className="heroActions">
           <a className="primaryButton" href="mailto:renan.marx144@gmail.com">renan.marx144@gmail.com</a>
+          <a className="secondaryButton" href={WHATSAPP_URL} target="_blank" rel="noreferrer">$ whatsapp</a>
           <a className="secondaryButton" href="https://www.linkedin.com/in/renanmarques-2202" target="_blank" rel="noreferrer">$ linkedin</a>
         </div>
       </section>
